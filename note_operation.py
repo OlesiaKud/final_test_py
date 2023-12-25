@@ -2,7 +2,7 @@ import datetime
 import csv
 
 def init_note():
-    # метод удаляет все записи, записывает 
+    # метод удаляет все записи, записывает первую строку в формате id;заготовок;текст заметки;дата
     print('Обновляем список заметок')
     with open ('note.csv', 'w', encoding="utf-8", newline="") as note: 
         last_id = 0
@@ -21,6 +21,7 @@ def init_note():
         )   
 
 def get_id():
+    # получаем Id заметки
     try:
         with open('note.csv', 'r',encoding="utf-8", newline='') as file:
             reader = csv.DictReader(file)
@@ -33,6 +34,7 @@ def get_id():
     
 
 def read_note():
+    # выводит в консоль все заметки
     print('Ваши заметки:')  
     with open ('note.csv', 'r', encoding="utf-8", newline="") as note:
         for line in note:
@@ -40,6 +42,7 @@ def read_note():
 
 
 def add_note():
+    # добавляет 1 заметку
     with open ('note.csv', 'a', encoding="utf-8", newline="") as note: 
         n = get_id() + 1
         last_id = str(n)     
@@ -62,9 +65,12 @@ def add_note():
 
 
 def edit_note():
+    # редактирует 1 заметку
     read_note()
+    # отображает все заметки
     note_id = input("Введите ID заметки для редактирования: ")
-    if note_id.isdigit() and int(note_id) > 0:
+    # если существует такая заметка, то удаляет старую
+    if note_id.isdigit() and int(note_id) > 0: 
         with open('note.csv', 'r', encoding="utf-8") as file:
             notes = list(csv.reader(file))
         
@@ -73,6 +79,7 @@ def edit_note():
             with open('note.csv', 'w', newline='', encoding="utf-8") as file:
                 writer = csv.writer(file)
                 writer.writerows(notes)
+    # запрашивает данные для новой заметки, помещает ее в конец списка(т.к. отображаются по дате создания/редактирования)
             last_id = note_id
             title = str(input('новый заголовок: '))
             body = str(input('новый текст: '))
@@ -88,17 +95,17 @@ def edit_note():
                     time
                 )
             )
-            print('Заметка отредактирована')
+            print('Заметка {last_id}: {title} отредактирована')
         else:
             print('Заметки с таким id не существует!')
             
 
     
 def delete_note():
+    # удаляет заметку
     print("Удаление заметок")
     print("Ознакомьтесь со всеми заметками и выберите id той, которую хотите удалить")
     read_note()
-
     del_num = input("Введите номер заметки, которую удалить: ")
     if del_num.isdigit() and int(del_num) > 0:
         with open('note.csv', 'r', encoding="utf-8") as file:
